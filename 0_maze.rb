@@ -10,7 +10,7 @@ class Maze
         @path = [@start_pos]
     end
 
-    attr_reader :maze_layout, :current_pos, :exit_pos
+    attr_reader :maze_layout, :current_pos, :exit_pos, :path
 
     def get_start_position
         start_row = 0
@@ -108,9 +108,9 @@ class Maze
             if self[@current_pos] == "E"
                 no_more_path = true
                 maze_solved = true
-            # elsif self.available_moves(@current_pos).length == 0
-            #     no_more_path = true
-            #     maze_solved = false
+            elsif self[@current_pos] == "S" && self.available_moves(@current_pos).length == 0
+                no_more_path = true
+                maze_solved = false
             end
         end
         maze_solved
@@ -126,6 +126,8 @@ if __FILE__ == $PROGRAM_NAME
     else
         puts "\nFailure, dead end."
     end
+    puts "\nTravelled #{maze.path.length} tiles"
+
     puts
     maze.print_maze
     puts
