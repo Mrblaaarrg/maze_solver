@@ -7,6 +7,7 @@ class Maze
         @start_pos = self.get_start_position
         @exit_pos = self.get_exit_position
         @current_pos = @start_pos
+        @path = [@start_pos]
     end
 
     attr_reader :maze_layout, :current_pos, :exit_pos
@@ -78,11 +79,25 @@ class Maze
         @maze_layout[coords[0]][coords[1]] = value
     end
 
-    def advance
+    def dumb_advance
         options = available_moves(@current_pos)
         destination = options[:up] || options[:right] || options[:down] || options[:left]
         @current_pos = destination
         self[@current_pos] = self[@current_pos] == "E" ? "E" : "X"
+    end
+
+    def advance
+        options = available_moves(@current_pos)
+        if options.length == 0
+            self[@current_pos] = "o"
+            @path.pop
+            @current_pos = @path.last
+        else
+            destination = options[:up] || options[:right] || options[:down] || options[:left]
+            @current_pos = destination
+            self[@current_pos] = self[@current_pos] == "E" ? "E" : "X"
+            @path << @current_pos
+        end
     end
 
     def find_path
@@ -93,9 +108,9 @@ class Maze
             if self[@current_pos] == "E"
                 no_more_path = true
                 maze_solved = true
-            elsif self.available_moves(@current_pos).length == 0
-                no_more_path = true
-                maze_solved = false
+            # elsif self.available_moves(@current_pos).length == 0
+            #     no_more_path = true
+            #     maze_solved = false
             end
         end
         maze_solved
