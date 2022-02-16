@@ -14,42 +14,42 @@ class Maze
     def get_start_position
         start_row = 0
         start_col = 0
-        (0...self.maze_layout.length).each do |row|
-            if self.maze_layout[row].include?("S")
+        (0...@maze_layout.length).each do |row|
+            if @maze_layout[row].include?("S")
                 start_row = row
             end
         end
-        start_col = self.maze_layout[start_row].index("S")
+        start_col = @maze_layout[start_row].index("S")
         [start_row, start_col]
     end
 
     def get_exit_position
         exit_row = 0
         exit_col = 0
-        (0...self.maze_layout.length).each do |row|
-            if self.maze_layout[row].include?("E")
+        (0...@maze_layout.length).each do |row|
+            if @maze_layout[row].include?("E")
                 exit_row = row
             end
         end
-        exit_col = self.maze_layout[exit_row].index("E")
+        exit_col = @maze_layout[exit_row].index("E")
         [exit_row, exit_col]
     end
 
     def print_maze
-        self.maze_layout.each do |line|
+        @maze_layout.each do |line|
             puts line.join
         end
         nil
     end
 
     def hash_tiles
-        maze_rows = self.maze_layout.length
-        maze_cols = self.maze_layout.first.length
+        maze_rows = @maze_layout.length
+        maze_cols = @maze_layout.first.length
         tiles = {}
         maze_rows.times do |row|
             maze_cols.times do |col|
                 coords = [row, col]
-                tiles[coords] = self.maze_layout[row][col]
+                tiles[coords] = @maze_layout[row][col]
             end
         end
         tiles
@@ -62,19 +62,27 @@ class Maze
         left = [position[0], position[1] - 1]
         moves = {up: up, down: down, right: right, left: left}
         moves.select do |direction, coords|
-            [" ", "E"].include?(self.maze_layout[coords[0]][coords[1]])
+            [" ", "E"].include?(@maze_layout[coords[0]][coords[1]])
         end
     end
 
     def pos_from_coords(coords)
-        self.maze_layout[coords[0]][coords[1]]
+        @maze_layout[coords[0]][coords[1]]
+    end
+
+    def [](coords)
+        @maze_layout[coords[0]][coords[1]]
+    end
+
+    def []=(coords, value)
+        @maze_layout[coords[0]][coords[1]] = value
     end
 
     def advance
-        options = available_moves(self.current_pos)
+        options = available_moves(@current_pos)
         destination = options[:up] || options[:right] || options[:down] || options[:left]
         @current_pos = destination
-        @maze_layout[self.current_pos[0]][self.current_pos[1]] = self.pos_from_coords(self.current_pos) == "E" ? "E" : "X"
+        self[@current_pos] = self[@current_pos] == "E" ? "E" : "X"
     end
 
     def find_path
@@ -82,10 +90,10 @@ class Maze
         no_more_path = false
         until no_more_path
             self.advance
-            if self.pos_from_coords(self.current_pos) == "E"
+            if self[@current_pos] == "E"
                 no_more_path = true
                 maze_solved = true
-            elsif self.available_moves(self.current_pos).length == 0
+            elsif self.available_moves(@current_pos).length == 0
                 no_more_path = true
                 maze_solved = false
             end
