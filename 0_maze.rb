@@ -83,19 +83,19 @@ class Maze
         options = available_moves(@current_pos)
         destination = options[:up] || options[:right] || options[:down] || options[:left]
         @current_pos = destination
-        self[@current_pos] = self[@current_pos] == "E" ? "E" : "X"
+        self[@current_pos] = self[@current_pos] == "E" ? "E" : "o"
     end
 
     def advance
         options = available_moves(@current_pos)
         if options.length == 0
-            self[@current_pos] = "o"
+            self[@current_pos] = "x"
             @path.pop
             @current_pos = @path.last
         else
             destination = options[:up] || options[:right] || options[:down] || options[:left]
             @current_pos = destination
-            self[@current_pos] = self[@current_pos] == "E" ? "E" : "X"
+            self[@current_pos] = self[@current_pos] == "E" ? "E" : "o"
             @path << @current_pos
         end
     end
