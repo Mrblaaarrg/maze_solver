@@ -220,7 +220,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
     puts "Enter the name of the maze file to use (without the .txt):"
-    maze_name = gets.chomp + ".txt"
+    maze_name = "./maze_files/" + gets.chomp + ".txt"
     maze = Maze.new(maze_name)
     if maze.astar_find_path
         puts "\nSUCCESS!"
